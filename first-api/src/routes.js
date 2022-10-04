@@ -1,5 +1,4 @@
 const UserController = require('./controllers/UserController')
-const GameController = require('./controllers/GameController')
 
 module.exports = [
   {
@@ -8,8 +7,8 @@ module.exports = [
     handler: UserController.listUsers,
   },
   {
-    endpoint: '/games',
+    endpoint: '/users/:id',
     method: 'GET',
-    handler: GameController.listGames,
+    handler: UserController.getUserById,
   },
 ]

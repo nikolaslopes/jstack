@@ -5,19 +5,29 @@ const routes = require('./routes')
 
 const server = http.createServer((request, response) => {
   const parserdUrl = new URL(`http://localhost:3000${request.url}`)
+  let { pathname } = parserdUrl
+  let id = null
 
   console.log(
     `Request method: ${request.method} | Endpoint: ${parserdUrl.pathname}`
   )
 
+  const splitEndpoint = pathname.split('/').filter(Boolean)
+
+  if (splitEndpoint.length > 1) {
+    pathname = `/${splitEndpoint[0]}/:id`
+    id = splitEndpoint[1]
+  }
+
   const route = routes.find(
     (routeObj) =>
-      routeObj.endpoint === parserdUrl.pathname &&
-      routeObj.method === request.method
+      routeObj.endpoint === pathname && routeObj.method === request.method
   )
 
   if (route) {
     request.query = Object.fromEntries(parserdUrl.searchParams)
+    request.params = { id }
+
     route.handler(request, response)
   } else {
     response.writeHead(200, { 'Content-Type': 'text/html' })
