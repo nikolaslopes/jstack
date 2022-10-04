@@ -28,6 +28,11 @@ const server = http.createServer((request, response) => {
     request.query = Object.fromEntries(parserdUrl.searchParams)
     request.params = { id }
 
+    response.send = (statusCode, body) => {
+      response.writeHead(statusCode, { 'Content-Type': 'application/json' })
+      response.end(JSON.stringify(body))
+    }
+
     route.handler(request, response)
   } else {
     response.writeHead(200, { 'Content-Type': 'text/html' })
